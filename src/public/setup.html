@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Openclaw Setup</title>
+  <link rel="stylesheet" href="/setup/styles.css" />
+</head>
+
+<body>
+  <h1>Openclaw Setup</h1>
+  <p class="muted">This wizard configures Openclaw by running the same onboarding command it uses in the terminal, but
+    from the browser.</p>
+
+  <div class="card">
+    <h2>Status</h2>
+    <div id="status">Loading...</div>
+    <div style="margin-top: 0.75rem">
+      <a href="/openclaw" target="_blank">Open Openclaw UI</a>
+      &nbsp;|&nbsp;
+      <a href="/setup/export" target="_blank">Download backup (.tar.gz)</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Debug console</h2>
+    <p class="muted">Run a small allowlist of safe commands (no shell). Useful for debugging and recovery.</p>
+    <div style="display:flex; gap:0.5rem; align-items:center">
+      <select id="consoleCmd" style="flex: 1">
+        <option value="gateway.restart">gateway.restart (wrapper-managed)</option>
+        <option value="gateway.stop">gateway.stop (wrapper-managed)</option>
+        <option value="gateway.start">gateway.start (wrapper-managed)</option>
+        <option value="openclaw.status">openclaw status</option>
+        <option value="openclaw.health">openclaw health</option>
+        <option value="openclaw.doctor">openclaw doctor</option>
+        <option value="openclaw.logs">openclaw logs</option>
+        <option value="openclaw.config.get">openclaw config get &lt;path&gt;</option>
+        <option value="openclaw.version">openclaw --version</option>
+      </select>
+      <input id="consoleArg" placeholder="Optional arg (e.g. 200, gateway.port)" style="flex: 1" />
+      <button id="consoleRun" style="background:#0f172a">Run</button>
+    </div>
+    <pre id="consoleOut" style="white-space:pre-wrap"></pre>
+  </div>
+
+  <div class="card">
+    <h2>Config editor (advanced)</h2>
+    <p class="muted">Edits the full config file on disk (JSON5). Saving creates a timestamped <code>.bak-*</code> backup
+      and restarts the gateway.</p>
+    <div class="muted" id="configPath"></div>
+    <textarea id="configText"
+      style="width:100%; height: 260px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;"></textarea>
+    <div style="margin-top:0.5rem">
+      <button id="configReload" style="background:#1f2937">Reload</button>
+      <button id="configSave" style="background:#111; margin-left:0.5rem">Save</button>
+    </div>
+    <pre id="configOut" style="white-space:pre-wrap"></pre>
+  </div>
+
+  <div class="card">
+    <h2>1) Model/auth provider</h2>
+    <p class="muted">Matches the groups shown in the terminal onboarding.</p>
+    <label>Provider group</label>
+    <select id="authGroup"></select>
+
+    <label>Auth method</label>
+    <select id="authChoice"></select>
+
+    <label>Key / Token (if required)</label>
+    <input id="authSecret" type="password" placeholder="Paste API key / token if applicable" />
+
+    <label>Wizard flow</label>
+    <select id="flow">
+      <option value="quickstart">quickstart</option>
+      <option value="advanced">advanced</option>
+      <option value="manual">manual</option>
+    </select>
+  </div>
+
+  <div class="card">
+    <h2>2) Optional: Channels</h2>
+    <p class="muted">You can also add channels later inside Openclaw, but this helps you get messaging working
+      immediately.</p>
+
+    <label>Telegram bot token (optional)</label>
+    <input id="telegramToken" type="password" placeholder="123456:ABC..." />
+    <div class="muted" style="margin-top: 0.25rem">
+      Get it from BotFather: open Telegram, message <code>@BotFather</code>, run <code>/newbot</code>, then copy the
+      token.
+    </div>
+
+    <label>Discord bot token (optional)</label>
+    <input id="discordToken" type="password" placeholder="Bot token" />
+    <div class="muted" style="margin-top: 0.25rem">
+      Get it from the Discord Developer Portal: create an application, add a Bot, then copy the Bot Token.<br />
+      <strong>Important:</strong> Enable <strong>MESSAGE CONTENT INTENT</strong> in Bot → Privileged Gateway Intents, or
+      the bot will crash on startup.
+    </div>
+
+    <label>Slack bot token (optional)</label>
+    <input id="slackBotToken" type="password" placeholder="xoxb-..." />
+
+    <label>Slack app token (optional)</label>
+    <input id="slackAppToken" type="password" placeholder="xapp-..." />
+  </div>
+
+  <div class="card">
+    <h2>3) Run onboarding</h2>
+    <button id="run">Run setup</button>
+    <button id="pairingApprove" class="secondary-button">Approve pairing</button>
+    <button id="reset" class="tertiary-button">Reset setup</button>
+    <pre id="log"></pre>
+    <p class="muted">Reset deletes the Openclaw config file so you can rerun onboarding. Pairing approval lets you grant
+      DM access when dmPolicy=pairing.</p>
+  </div>
+
+  <script src="/setup/app.js"></script>
+</body>
+
+</html>

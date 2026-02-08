@@ -241,3 +241,4 @@ Yes! Each Railway service can run its own independent OpenClaw instance:
 3. You can have separate instances for different purposes (personal, work, testing)
 4. Each instance needs its own API keys (or can share, depending on your API limits)
 
+trigger workflow

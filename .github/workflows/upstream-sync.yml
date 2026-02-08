@@ -1,0 +1,38 @@
+name: Upstream sync (PR)
+
+on:
+  schedule:
+    - cron: "0 3 * * *"   # daily 03:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Add upstream and merge
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add upstream https://github.com/praveen-ks-2001/openclaw-railway-template-enhanced.git
+          git fetch upstream
+          git checkout main
+          git merge --no-edit upstream/main || true
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: upstream-sync
+          title: "Sync from upstream template"
+          body: "Automated sync from upstream template repo into main."
+          base: main
+          labels: upstream-sync
